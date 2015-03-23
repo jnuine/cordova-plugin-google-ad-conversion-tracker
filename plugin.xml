@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  id="com.jnuine.google-ad-conversion-tracker" version="0.0.1">
+
+  <name>Google Ad Conversion Tracker</name>
+  <description>Cordova Plugin for Google App Install and Conversion Event Tracking</description>
+  <license>Apache 2.0</license>
+  <keywords>google,ad,install,conversion,tracking</keywords>
+
+  <engines>
+    <engine name="cordova" version="&gt;=3.2.0" />
+  </engines>
+
+  <js-module src="www/GoogleAdConversionTracker.js" name="GoogleAdConversionTracker">
+    <clobbers target="window.GACTracker" />
+  </js-module>
+
+
+  <platform name="ios">
+    <config-file target="config.xml" parent="/*">
+      <feature name="GoogleAdConversionTracker">
+        <param name="ios-package" value="GoogleAdConversionTracker"/>
+      </feature>
+    </config-file>
+
+    <header-file src="sdk/ios/ACTReporter.h" />
+    <header-file src="src/ios/GoogleAdConversionTracker.h" />
+    <source-file src="src/ios/GoogleAdConversionTracker.m" />
+    <source-file src="sdk/ios/libGoogleConversionTracking.a" framework="true"/>
+
+    <framework src="AdSupport.framework" />
+  </platform>
+
+  <platform name="android">
+    <config-file target="res/xml/config.xml" parent="/*">
+      <feature name="GoogleAdConversionTracker" >
+        <param name="android-package" value="com.jnuine.cordova.GoogleAdConversionTracker"/>
+      </feature>
+    </config-file>
+
+    <config-file target="AndroidManifest.xml" parent="/*">
+      <uses-permission android:name="android.permission.INTERNET" />
+      <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    </config-file>
+
+    <config-file target="AndroidManifest.xml" parent="/manifest/application">
+      <receiver android:name="com.google.ads.conversiontracking.InstallReceiver"
+        android:exported="true">
+        <intent-filter>
+          <action android:name="com.android.vending.INSTALL_REFERRER" />
+        </intent-filter>
+      </receiver>
+    </config-file>
+
+    <source-file src="src/android/GoogleAdConversionTracker.java" target-dir="src/com/jnuine/cordova" />
+    <source-file src="sdk/android/GoogleConversionTrackingSdk-2.2.1.jar" target-dir="libs" />
+  </platform>
+
+</plugin>
+
