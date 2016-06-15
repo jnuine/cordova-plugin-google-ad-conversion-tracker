@@ -54,8 +54,7 @@
     </config-file>
 
     <source-file src="src/android/GoogleAdConversionTracker.java" target-dir="src/com/jnuine/cordova" />
-    <source-file src="sdk/android/GoogleConversionTrackingSdk-2.2.1.jar" target-dir="libs" />
+    <source-file src="sdk/android/GoogleConversionTrackingSdk-2.2.4.jar" target-dir="libs" />
   </platform>
 
 </plugin>
-
