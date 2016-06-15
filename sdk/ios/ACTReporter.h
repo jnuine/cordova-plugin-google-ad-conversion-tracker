@@ -22,6 +22,16 @@
 /// String representation of conversion value. Example: @"3.99".
 @property(nonatomic, copy) NSString *value;
 
+/// String representation of three-letter ISO 4217 currency code. Example: @"USD".
+@property(nonatomic, copy) NSString *currencyCode;
+
+/// Reports conversion information to Google.
++ (void)reportWithConversionID:(NSString *)conversionID
+                         label:(NSString *)label
+                         value:(NSString *)value
+                  currencyCode:(NSString *)currencyCode
+                  isRepeatable:(BOOL)isRepeatable;
+
 /// Reports conversion information to Google.
 + (void)reportWithConversionID:(NSString *)conversionID
                          label:(NSString *)label
@@ -31,7 +41,17 @@
 /// Reports an In-App Purchase (IAP) to Google.
 + (void)reportWithProductID:(NSString *)productID
                       value:(NSString *)value
+               currencyCode:(NSString *)currencyCode
                isRepeatable:(BOOL)isRepeatable;
+
+/// Reports an In-App Purchase (IAP) to Google.
++ (void)reportWithProductID:(NSString *)productID
+                      value:(NSString *)value
+               isRepeatable:(BOOL)isRepeatable;
+
+/// Reports universal link data to Google. Call this method from your application delegate's
+/// application:continueUserActivity:restorationHandler: method with the provided user activity.
++ (void)reportUniversalLinkWithUserActivity:(NSUserActivity *)userActivity;
 
 /// Register a click referrer from a Google ad click URL. Returns YES if the URL was registered
 /// successfully.
@@ -42,7 +62,22 @@
 - (instancetype)initWithConversionID:(NSString *)conversionID
                                label:(NSString *)label
                                value:(NSString *)value
+                        currencyCode:(NSString *)currencyCode
                         isRepeatable:(BOOL)isRepeatable;
+
+/// Returns an initialized conversion ACTConversionReporter object for conversion ID/label
+/// reporting. Use this method to separate conversion tracker initialization and reporting.
+- (instancetype)initWithConversionID:(NSString *)conversionID
+                               label:(NSString *)label
+                               value:(NSString *)value
+                        isRepeatable:(BOOL)isRepeatable;
+
+/// Returns an initialized conversion ACTConversionReporter object for In-App Purchase reporting.
+/// Use this method to separate conversion tracker initialization and reporting.
+- (instancetype)initWithProductID:(NSString *)productID
+                            value:(NSString *)value
+                     currencyCode:(NSString *)currencyCode
+                     isRepeatable:(BOOL)isRepeatable;
 
 /// Returns an initialized conversion ACTConversionReporter object for In-App Purchase reporting.
 /// Use this method to separate conversion tracker initialization and reporting.
