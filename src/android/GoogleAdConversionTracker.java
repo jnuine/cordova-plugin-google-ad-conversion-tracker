@@ -1,25 +1,36 @@
 package com.jnuine.cordova;
 
-import org.apache.cordova.CordovaPlugin;
-import org.apache.cordova.CallbackContext;
+import android.util.Log;
 
+import com.google.ads.conversiontracking.AdWordsConversionReporter;
+import com.google.ads.conversiontracking.AdWordsRemarketingReporter;
+
+import org.apache.cordova.CallbackContext;
+import org.apache.cordova.CordovaPlugin;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.google.ads.conversiontracking.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class GoogleAdConversionTracker extends CordovaPlugin {
 
   @Override
   public boolean execute (String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
     String conversionId = args.getString(0);
-    String trackingLabel = args.getString(1);
-    String trackingValue = args.getString(2);
-    Boolean repeatable = args.getBoolean(3);
 
     if (action.equals("trackConversion")) {
+      String trackingLabel = args.getString(1);
+      String trackingValue = args.getString(2);
+      Boolean repeatable = args.getBoolean(3);
       this.trackConversion(conversionId, trackingLabel, trackingValue, repeatable, callbackContext);
+      return true;
+    }
+    else if (action.equals("trackRemarketingConversion")) {
+      JSONObject params = args.getJSONObject(1);
+      this.trackRemarketingConversion(conversionId, params, callbackContext);
       return true;
     }
 
@@ -42,5 +53,26 @@ public class GoogleAdConversionTracker extends CordovaPlugin {
     }
 
   }
-}
 
+  private void trackRemarketingConversion (String conversionId, JSONObject params, CallbackContext callbackContext) {
+
+    try {
+      Map<String, Object> paramsMap = new HashMap<String, Object>();
+      Iterator<String> keys = params.keys();
+      String key = null;
+      while (keys.hasNext()) {
+        key = keys.next();
+        paramsMap.put(key, params.get(key));
+      }
+      AdWordsRemarketingReporter.reportWithConversionId(
+        this.cordova.getActivity().getApplicationContext(),
+        conversionId,
+        paramsMap
+      );
+    } catch (final Exception e) {
+      e.printStackTrace();
+      callbackContext.error("Error in GoogleAppConversion remarketing tracking.");
+    }
+  }
+
+}

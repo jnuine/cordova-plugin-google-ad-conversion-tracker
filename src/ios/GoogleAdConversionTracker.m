@@ -6,10 +6,10 @@
 
 - (void)trackConversion:(CDVInvokedUrlCommand*)command
 {
-    NSString *conversionId = [command.arguments objectAtIndex:0];
-    NSString *trackingLabel = [command.arguments objectAtIndex:1];
-    NSString *trackingValue = [command.arguments objectAtIndex:2];
-    BOOL repeatable = [[command.arguments objectAtIndex:3] boolValue];
+    NSString *conversionId = [command argumentAtIndex:0];
+    NSString *trackingLabel = [command argumentAtIndex:1];
+    NSString *trackingValue = [command argumentAtIndex:2];
+    BOOL repeatable = [[command argumentAtIndex:3] boolValue];
 
     [self.commandDelegate runInBackground:^{
 
@@ -18,6 +18,19 @@
 
       CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
       [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }];
+}
+
+- (void)trackRemarketingConversion:(CDVInvokedUrlCommand*)command
+{
+    NSString *conversionId = [command argumentAtIndex:0];
+    NSDictionary* customParameters = [command argumentAtIndex:1];
+
+    [self.commandDelegate runInBackground:^{
+        [ACTRemarketingReporter reportWithConversionID:conversionId customParameters:customParameters];
+
+        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
     }];
 }
 
